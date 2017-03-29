@@ -1,9 +1,9 @@
 angular.module('myApp', [])
-.directive('myMap', function() {
+.directive('myMap', ['$http', function($http) {
   // Directive Link Function
-  var link = function(scope, element, attrs) {
+  var link = function($scope, element, attrs) {
     var map, infoWindow;
-    var markers = [];
+    $scope.markers = [];
 
     // Map Config
     var mapOptions = {
@@ -20,6 +20,18 @@ angular.module('myApp', [])
       }
     }
 
+    // Initialize the Map's Markers --- would be better to use a promise and subscribe to it
+    // then we wouldn't have to have separate methods for getMarkers and initMarkers
+    function initMarkers(map) {
+      return $http.get('/markers').success(function(data) {
+        angular.copy(data, $scope.markers);
+        console.log(data);
+        data.forEach(function(marker) {
+          setMarker(map, new google.maps.LatLng(marker.lat, marker.lng), marker.title, marker.description);
+        });
+      });
+    }
+
     // Place a marker
     function setMarker(map, position, title, content) {
       var marker;
@@ -32,7 +44,7 @@ angular.module('myApp', [])
       };
 
       marker = new google.maps.Marker(markerOptions);
-      markers.push(marker); // Add Marker to the Array
+      $scope.markers.push(marker); // Add Marker to the Array
 
       google.maps.event.addListener(marker, 'click', function() {
         // Close the Window if it isn't Undefined (it's open)
@@ -49,10 +61,43 @@ angular.module('myApp', [])
       });
     }
 
+    // ####### Scope Level Methods #######
+    // Add a Marker to the Map
+    $scope.addMarker = function(){
+      var position = new google.maps.LatLng($scope.lat, $scope.lng);
+      setMarker(map, position, $scope.title, $scope.content);
+      console.log($scope.lat, $scope.lng, $scope.title, $scope.description);
+      persistMarker($scope.lat, $scope.lng, $scope.title, $scope.description);
+    }
+
+    //####### API Related Methods ########
+    // Save a Marker to the DB
+    function persistMarker(lat, lng, title, content){
+      var marker = {
+        title: title,
+        description: content,
+        lat: lat,
+        lng: lng
+      }
+
+      $http.post('/markers', marker).success(function(data){
+        $scope.markers.push(data);
+      });
+    }
+
+    // Get all Markers Saved in the DB
+    function getMarkers() {
+      return $http.get('/markers').success(function(data){
+        angular.copy(data, $scope.markers);
+      });
+    }
+
+    // ####### Call the Initialization Methods ###########
     // Show the Map
     initMap();
-
-    // Set a Marker
+    // Show the markers
+    initMarkers(map);
+    // Set a Default Marker and Show it
     setMarker(map, new google.maps.LatLng(40.2518, -111.6493), 'BYU', 'Brigham Young University in Provo, Utah');
   };
 
@@ -62,4 +107,4 @@ angular.module('myApp', [])
     replace: true,
     link: link
   };
-});
+}]);

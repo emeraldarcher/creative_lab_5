@@ -6,7 +6,7 @@
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.min.js"></script>
   </head>
 
-  <body ng-app="myApp" ng-directive="myMap">
+  <body ng-app="myApp">
     <!-- Header/Title -->
     <div class="row">
       <div class="col-md-6 col-md-offset-3">
@@ -19,8 +19,23 @@
     <!-- New Marker Form -->
     <div class="row">
       <div class="col-md-6 col-md-offset-3">
-        <form ng-submit="setMarker()" style = "margin-top30px;">
-          <input type="text" ng-model="formContent"></input>
+        <form ng-submit="addMarker()" style = "margin-top30px;">
+          <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" class="form-control" id="title" placeholder="BYU" ng-model="title">
+          </div>
+          <div class="form-group">
+            <label for="description">Description</label>
+            <input type="text" class="form-control" id="description" placeholder="Brigham Young University in Provo, Utah" ng-model="description">
+          </div>
+          <div class="form-group">
+            <label for="lat">Lattitude</label>
+            <input type="text" class="form-control" id="lat" placeholder="40.2518" ng-model="lat">
+          </div>
+          <div class="form-group">
+            <label for="lng">Longitude</label>
+            <input type="text" class="form-control" id="lng" placeholder="-111.6493" ng-model="lng">
+          </div>
           <button type="submit">Add Marker</button>
         </form>
       </div>
