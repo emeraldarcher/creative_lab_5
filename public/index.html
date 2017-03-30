@@ -1,55 +1,65 @@
 <html>
   <head>
-    <title>Map Markers</title>
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+    <title>Map Markers</title> <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="stylesheets/style.css" rel="stylesheet">
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.min.js"></script>
   </head>
-
   <body ng-app="myApp">
-    <!-- Header/Title -->
-    <div class="row">
-      <div class="col-md-6 col-md-offset-3">
-        <div class="page-header">
-          <h1>Creativity Lab 5 -- Map Markers</h1>
+    <div id="sidebar">
+      <!-- New Marker Form -->
+      <div class="row">
+        <div class="col-md-12">
+          <h3>
+            <i class="fa fa-map-o" aria-hidden="true"></i>
+            Creative #5 - Map Markers
+          </h3>
+          <hr>
+          <div class="alert alert-danger" role="alert" ng-show="error">
+            {{error}}
+          </div>
+          <form ng-submit="addMarker()" style = "margin-top30px;">
+            <div class="form-group">
+              <label for="title">Title</label>
+              <input type="text" class="form-control" id="title" placeholder="BYU" ng-model="title">
+            </div>
+            <div class="form-group">
+              <label for="description">Description</label>
+              <input type="text" class="form-control" id="description" ng-model="description" placeholder="Brigham Young University in Provo, Utah" ng-model="description">
+            </div>
+            <div class="form-group">
+              <label for="lat">Lattitude</label>
+              <input type="text" class="form-control" id="lat" placeholder="40.2518" ng-model="lat">
+            </div>
+            <div class="form-group">
+              <label for="lng">Longitude</label>
+              <input type="text" class="form-control" id="lng" placeholder="-111.6493" ng-model="lng">
+            </div>
+            <button class="btn btn-default" type="submit">Add Marker</button>
+          </form>
+          <br>
+          <h3>
+            <i class="fa fa-fw fa-map-marker" aria-hidden="true"></i>
+            Saved Markers (click to go)
+          </h3>
+          <hr>
+          <div class="list-group">
+            <a ng-repeat="marker in markers" href="#" ng-click="moveToLocation(marker)" class="list-group-item">
+              <h4 class="list-group-item-heading">
+                {{marker.title}}
+              </h4>
+              <p class="list-group-item-text">
+                {{marker.description}}<br>
+                <small class="text-muted">({{marker.lat}}, {{marker.lng}})</small>
+              </p>
+            </a>
+          </div>
         </div>
       </div>
     </div>
-
-    <!-- New Marker Form -->
-    <div class="row">
-      <div class="col-md-6 col-md-offset-3">
-        <form ng-submit="addMarker()" style = "margin-top30px;">
-          <div class="form-group">
-            <label for="title">Title</label>
-            <input type="text" class="form-control" id="title" placeholder="BYU" ng-model="title">
-          </div>
-          <div class="form-group">
-            <label for="description">Description</label>
-            <input type="text" class="form-control" id="description" placeholder="Brigham Young University in Provo, Utah" ng-model="description">
-          </div>
-          <div class="form-group">
-            <label for="lat">Lattitude</label>
-            <input type="text" class="form-control" id="lat" placeholder="40.2518" ng-model="lat">
-          </div>
-          <div class="form-group">
-            <label for="lng">Longitude</label>
-            <input type="text" class="form-control" id="lng" placeholder="-111.6493" ng-model="lng">
-          </div>
-          <button type="submit">Add Marker</button>
-        </form>
-      </div>
-    </div>
-
-    <!-- Map -->
-    <div class="row">
-      <div class="col-md-6 col-md-offset-3">
-        <div my-map=""></div>
-      </div>
-    </div>
-
+    <div id="gmaps" my-map=""></div>
     <!-- Google Maps API -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDMbK55uNwYtDoUae_gppqAHY5r8SD56hk"></script>
     <script src="javascripts/app.js"></script>
+    <script src="https://use.fontawesome.com/ffe88ad2da.js"></script>
   </body>
 </html>
